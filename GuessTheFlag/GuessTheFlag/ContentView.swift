@@ -13,11 +13,13 @@ struct ContentView: View {
     
     @State private var showingScore = false
     @State private var scoreTitle = ""
+    @State private var finalScore = 0
+    
+    @State private var answersCount = 0
+    @State private var endGame = false
     
     var body: some View {
         ZStack{
-            //            LinearGradient(colors: [ContentView.gradientColor, .black], startPoint: .top, endPoint: .bottom)
-            //                .ignoresSafeArea()
             RadialGradient(stops: [
                 .init(color: Color(red: 0.38, green: 0.41, blue: 0.36), location: 0.3),
                 .init(color: Color(red:0.76, green:0.15, blue:0.26), location: 0.3)
@@ -58,7 +60,7 @@ struct ContentView: View {
                 Spacer()
                 Spacer()
                 
-                Text("Score: ???")
+                Text("Score: \(finalScore)")
                     .foregroundStyle(.white)
                     .font(.title.bold())
                 
@@ -70,22 +72,38 @@ struct ContentView: View {
         .alert(scoreTitle, isPresented: $showingScore){
             Button("Continue", action: askQuestion)
         } message: {
-            Text("Your score is ???")
+            Text("Your score is \(finalScore)!")
+        }
+        .alert("You nailed it!", isPresented: $endGame){
+            Button("Reset", action: resetGame)
+        } message: {
+            Text("Your final score is \(finalScore)!")
         }
     }
     func flagTapped(_ number: Int){
         if number == correctAnswer {
             scoreTitle = "Correct!"
+            finalScore += 1
         } else {
-            scoreTitle = "Wrong!"
+            scoreTitle = "Wrong! That's the flag of \(countries[number])"
+        }
+        showingScore = true
+        answersCount += 1
+        print(answersCount)
+        
+        if answersCount == 8 {
+            endGame = true
         }
         
-        showingScore = true
     }
     
     func askQuestion(){
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+    }
+    
+    func resetGame(){
+        finalScore = 0
     }
 }
 
