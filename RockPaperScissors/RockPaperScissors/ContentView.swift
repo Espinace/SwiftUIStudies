@@ -58,7 +58,7 @@ struct ContentView: View {
             .padding()
             .font(.largeTitle.bold())
         }
-        .alert("Nice Move!", isPresented: $result){
+        .alert("Keep Going!", isPresented: $result){
             Button("Continue", action: continuePlaying)
         } message: {
             Text("Your score is \(finalScore)")
